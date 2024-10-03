@@ -1,0 +1,71 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "build debug",
+			"command": "/usr/bin/clang++",
+			"args": [
+				"-std=c++20",
+				"-stdlib=libc++",
+				"-g",
+				"${workspaceFolder}/source/*.cpp",
+				"-o",
+				"${workspaceFolder}/build/rubik_debug",
+				"-Wall",
+				"-Wextra",
+				"-Wpedantic"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"type": "shell",
+			"label": "build release",
+			"command": "/usr/bin/clang++",
+			"args": [
+				"-std=c++20",
+				"-stdlib=libc++",
+				"${workspaceFolder}/source/*.cpp",
+				"-o",
+				"${workspaceFolder}/build/rubik",
+				"-O3",
+				"-Wall",
+				"-Wextra",
+				"-Wpedantic"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			}
+		},
+		{
+			"type": "shell",
+			"label": "clean",
+			"command": "rm",
+			"args": [
+				"${workspaceFolder}/build/rubik",
+				"${workspaceFolder}/build/rubik_debug"
+			],
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			}
+		}
+	]
+}

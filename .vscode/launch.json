@@ -1,0 +1,27 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Debug",
+			"type": "lldb",
+			"request": "launch",
+			"program": "${workspaceFolder}/build/rubik_debug",
+			"args": [],
+			"cwd": "${workspaceFolder}",
+			"stopOnEntry": false,
+			"runInTerminal": false,
+			"preLaunchTask": "build debug"
+		},
+		{
+			"name": "Release",
+			"type": "lldb",
+			"request": "launch",
+			"program": "${workspaceFolder}/build/rubik",
+			"args": [],
+			"cwd": "${workspaceFolder}",
+			"stopOnEntry": false,
+			"runInTerminal": false,
+			"preLaunchTask": "build release"
+		}
+	]
+}
