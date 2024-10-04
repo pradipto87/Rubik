@@ -49,12 +49,16 @@ void recur(const string& cube, unordered_map<string, string>& allComb, string pa
 int main() {
 	// string cube("YYYYYYYYYGGGGGGGGGOOOOOOOOOBBBBBBBBBRRRRRRRRRWWWWWWWWW");
 	string cube("0abcdefghijklmnopqrstuvwxyz1ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-	string rot = CubeOps::rotateMidLeft(CubeOps::rotateTopLeft(CubeOps::faceRight(cube)));
 	cout << cube << endl;
-	cout << rot << endl;
-	CubeOps::print(cube);
-	CubeOps::print(rot);
+	cout << "rotateRightDown : " << CubeOps::rotateRightDown(cube) << endl;
+	cout << "rotateTopLeft : " << CubeOps::rotateTopLeft(cube) << endl;
+	cout << "rotateMidLeft : " << CubeOps::rotateMidLeft(cube) << endl;
+	cout << "rotateBottomLeft : " << CubeOps::rotateBottomLeft(cube) << endl;
+	cout << "rotateTopRight : " << CubeOps::rotateTopRight(cube) << endl;
+	cout << "rotateMidRight : " << CubeOps::rotateMidRight(cube) << endl;
+	cout << "rotateBottomRight : " << CubeOps::rotateBottomRight(cube) << endl;
 	return 0;
+
 	unordered_map<string, string> allComb;
 	recur(cube, allComb, "");
 	for (auto& ac : allComb) {

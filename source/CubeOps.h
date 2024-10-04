@@ -5,21 +5,22 @@
 #include <string>
 
 namespace CubeOps {
-std::string faceUp(const std::string);
-std::string faceDown(const std::string);
-std::string faceLeft(const std::string);
-std::string faceRight(const std::string);
-std::string rotateLeftUp(const std::string);
-std::string rotateMidUp(std::string);
-std::string rotateRightUp(const std::string);
-std::string rotateMidDown(const std::string);
-std::string rotateRightDown(const std::string);
-std::string rotateTopLeft(const std::string);
-std::string rotateMidLeft(const std::string);
-std::string rotateBottomLeft(const std::string);
-std::string rotateTopRight(const std::string);
-std::string rotateMidRight(const std::string);
-std::string rotateBottomRight(const std::string);
+void faceUp(std::string&);
+void faceDown(std::string&);
+void faceLeft(std::string&);
+void faceRight(std::string&);
+void rotateLeftUp(std::string&);
+void rotateMidUp(std::string&);
+void rotateRightUp(std::string&);
+void rotateLeftDown(std::string&);
+void rotateMidDown(std::string&);
+void rotateRightDown(std::string&);
+void rotateTopLeft(std::string&);
+void rotateMidLeft(std::string&);
+void rotateBottomLeft(std::string&);
+void rotateTopRight(std::string&);
+void rotateMidRight(std::string&);
+void rotateBottomRight(std::string&);
 std::string getLowestComb(const std::string);
 void print(const std::string&);
 }  // namespace CubeOps
