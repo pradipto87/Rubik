@@ -1,32 +1,45 @@
 #include "CubeOps.h"
 
-#include <algorithm>
 #include <array>
 #include <iostream>
 #include <string>
 
 namespace CubeOps {
-void faceUp(std::string& cube) {
-	rotateLeftUp(cube);
-	rotateMidUp(cube);
-	rotateRightUp(cube);
+namespace Face {
+void Up(std::string& cube) {
+	Rotate::LeftUp(cube);
+	Rotate::MidUp(cube);
+	Rotate::RightUp(cube);
 }
-void faceDown(std::string& cube) {
-	rotateLeftDown(cube);
-	rotateMidDown(cube);
-	rotateRightDown(cube);
+void Down(std::string& cube) {
+	Rotate::LeftDown(cube);
+	Rotate::MidDown(cube);
+	Rotate::RightDown(cube);
 }
-void faceLeft(std::string& cube) {
-	rotateTopLeft(cube);
-	rotateMidLeft(cube);
-	rotateBottomLeft(cube);
+void Left(std::string& cube) {
+	Rotate::TopLeft(cube);
+	Rotate::MidLeft(cube);
+	Rotate::BottomLeft(cube);
 }
-void faceRight(std::string& cube) {
-	rotateTopRight(cube);
-	rotateMidRight(cube);
-	rotateBottomRight(cube);
+void Right(std::string& cube) {
+	Rotate::TopRight(cube);
+	Rotate::MidRight(cube);
+	Rotate::BottomRight(cube);
 }
-void rotateLeftUp(std::string& cube) {
+void Clock(std::string& cube) {
+	Rotate::FaceClock(cube);
+	Rotate::MidClock(cube);
+	Rotate::BackClock(cube);
+}
+void AntiClock(std::string& cube) {
+	Rotate::FaceAntiClock(cube);
+	Rotate::MidAntiClock(cube);
+	Rotate::BackAntiClock(cube);
+}
+}  // namespace Face
+
+namespace Rotate {
+void LeftUp(std::string& cube) {
 	char tmp;
 
 	tmp = cube[0];
@@ -59,7 +72,7 @@ void rotateLeftUp(std::string& cube) {
 	cube[16] = cube[12];
 	cube[12] = tmp;
 }
-void rotateMidUp(std::string& cube) {
+void MidUp(std::string& cube) {
 	char tmp;
 
 	tmp = cube[1];
@@ -80,7 +93,7 @@ void rotateMidUp(std::string& cube) {
 	cube[52] = cube[37];
 	cube[37] = tmp;
 }
-void rotateRightUp(std::string& cube) {
+void RightUp(std::string& cube) {
 	char tmp;
 
 	tmp = cube[2];
@@ -113,7 +126,7 @@ void rotateRightUp(std::string& cube) {
 	cube[34] = cube[32];
 	cube[32] = tmp;
 }
-void rotateLeftDown(std::string& cube) {
+void LeftDown(std::string& cube) {
 	char tmp;
 
 	tmp = cube[0];
@@ -146,7 +159,7 @@ void rotateLeftDown(std::string& cube) {
 	cube[16] = cube[14];
 	cube[14] = tmp;
 }
-void rotateMidDown(std::string& cube) {
+void MidDown(std::string& cube) {
 	char tmp;
 
 	tmp = cube[1];
@@ -167,7 +180,7 @@ void rotateMidDown(std::string& cube) {
 	cube[52] = cube[25];
 	cube[25] = tmp;
 }
-void rotateRightDown(std::string& cube) {
+void RightDown(std::string& cube) {
 	char tmp;
 
 	tmp = cube[2];
@@ -200,7 +213,7 @@ void rotateRightDown(std::string& cube) {
 	cube[34] = cube[30];
 	cube[30] = tmp;
 }
-void rotateTopLeft(std::string& cube) {
+void TopLeft(std::string& cube) {
 	char tmp;
 
 	tmp = cube[0];
@@ -233,7 +246,7 @@ void rotateTopLeft(std::string& cube) {
 	cube[29] = cube[38];
 	cube[38] = tmp;
 }
-void rotateMidLeft(std::string& cube) {
+void MidLeft(std::string& cube) {
 	char tmp;
 
 	tmp = cube[12];
@@ -254,7 +267,7 @@ void rotateMidLeft(std::string& cube) {
 	cube[32] = cube[41];
 	cube[41] = tmp;
 }
-void rotateBottomLeft(std::string& cube) {
+void BottomLeft(std::string& cube) {
 	char tmp;
 
 	tmp = cube[15];
@@ -287,7 +300,7 @@ void rotateBottomLeft(std::string& cube) {
 	cube[52] = cube[48];
 	cube[48] = tmp;
 }
-void rotateTopRight(std::string& cube) {
+void TopRight(std::string& cube) {
 	char tmp;
 
 	tmp = cube[0];
@@ -320,7 +333,7 @@ void rotateTopRight(std::string& cube) {
 	cube[29] = cube[20];
 	cube[20] = tmp;
 }
-void rotateMidRight(std::string& cube) {
+void MidRight(std::string& cube) {
 	char tmp;
 
 	tmp = cube[12];
@@ -341,7 +354,7 @@ void rotateMidRight(std::string& cube) {
 	cube[32] = cube[23];
 	cube[23] = tmp;
 }
-void rotateBottomRight(std::string& cube) {
+void BottomRight(std::string& cube) {
 	char tmp;
 
 	tmp = cube[15];
@@ -374,37 +387,143 @@ void rotateBottomRight(std::string& cube) {
 	cube[52] = cube[50];
 	cube[50] = tmp;
 }
-std::string getLowestComb(const std::string cube) {
-	std::vector<std::string> allComb(24, cube);
-	/*std::array<std::string, 24> allComb;
+void FaceClock(std::string& cube) {
+	Face::Left(cube);
+	Rotate::LeftDown(cube);
+	Face::Right(cube);
+}
+void MidClock(std::string& cube) {
+	Face::Left(cube);
+	Rotate::MidDown(cube);
+	Face::Right(cube);
+}
+void BackClock(std::string& cube) {
+	Face::Left(cube);
+	Rotate::RightDown(cube);
+	Face::Right(cube);
+}
+void FaceAntiClock(std::string& cube) {
+	Face::Left(cube);
+	Rotate::LeftUp(cube);
+	Face::Right(cube);
+}
+void MidAntiClock(std::string& cube) {
+	Face::Left(cube);
+	Rotate::MidUp(cube);
+	Face::Right(cube);
+}
+void BackAntiClock(std::string& cube) {
+	Face::Left(cube);
+	Rotate::RightUp(cube);
+	Face::Right(cube);
+}
+}  // namespace Rotate
+
+std::string getLowestComb(const std::string& cube) {
+	std::array<std::string, 24> allComb;
+
+	//||
 	allComb[0] = cube;
-	allComb[1] = d faceDown(allComb[1]);
-	allComb[2] = l faceLeft(allComb[2]);
-	allComb[3] = r faceRight(allComb[3]);
-	allComb[4] = u faceUp(allComb[4]);
 
-	allComb[5] = dl faceLeft(allComb[1]);
-	allComb[6] = dr faceRight(allComb[1]);
-	allComb[7] = ld faceDown(allComb[2]);
-	allComb[8] = ll faceLeft(allComb[2]);
-	allComb[9] = lu faceUp(allComb[2]);
-	allComb[10] = rd faceDown(allComb[3]);
-	allComb[11] = ru faceUp(allComb[3]);
-	allComb[12] = ul faceLeft(allComb[4]);
-	allComb[13] = ur faceRight(allComb[4]);
-	allComb[14] = uu faceUp(allComb[4]);
+	//|D|
+	allComb[1] = allComb[0];
+	Face::Down(allComb[1]);
 
-	allComb[15] = dll faceLeft(allComb[5]);
-	allComb[16] = uld faceDown(allComb[12]);
-	allComb[17] = ull faceLeft(allComb[12]);
-	allComb[18] = ulu faceUp(allComb[12]);
-	allComb[19] = urd faceDown(allComb[13]);
-	allComb[20] = uru faceUp(allComb[13]);
-	allComb[21] = uul faceLeft(allComb[14]);
-	allComb[22] = uur faceRight(allComb[14]);
-	allComb[23] = uull faceLeft(allComb[21]);
-	return *std::min_element(allComb.begin(), allComb.end());*/
-	return cube;
+	//|L|
+	allComb[2] = allComb[0];
+	Face::Left(allComb[2]);
+
+	//|R|
+	allComb[3] = allComb[0];
+	Face::Right(allComb[3]);
+
+	//|U|
+	allComb[4] = allComb[0];
+	Face::Up(allComb[4]);
+
+	//|DD|UU|
+	allComb[5] = allComb[1];
+	Face::Down(allComb[5]);
+
+	//|DL|
+	allComb[6] = allComb[1];
+	Face::Left(allComb[6]);
+
+	//|DR|
+	allComb[7] = allComb[1];
+	Face::Right(allComb[7]);
+
+	//|LD|
+	allComb[8] = allComb[2];
+	Face::Down(allComb[8]);
+
+	//|LL|RR|
+	allComb[9] = allComb[2];
+	Face::Left(allComb[9]);
+
+	//|LU|
+	allComb[10] = allComb[2];
+	Face::Up(allComb[10]);
+
+	//|RD|
+	allComb[11] = allComb[3];
+	Face::Down(allComb[11]);
+
+	//|RU|
+	allComb[12] = allComb[3];
+	Face::Up(allComb[12]);
+
+	//|UL|
+	allComb[13] = allComb[4];
+	Face::Left(allComb[13]);
+
+	//|UR|
+	allComb[14] = allComb[4];
+	Face::Right(allComb[14]);
+
+	//|DDL|RDD|RUU|UUL|
+	allComb[15] = allComb[5];
+	Face::Left(allComb[15]);
+
+	//|DDR|LDD|LUU|UUR|
+	allComb[16] = allComb[5];
+	Face::Right(allComb[16]);
+
+	//|DLD|LDL|RUR|URU|
+	allComb[17] = allComb[6];
+	Face::Down(allComb[17]);
+
+	//|DLL|DRR|LLU|RRU|
+	allComb[18] = allComb[6];
+	Face::Left(allComb[18]);
+
+	//|DLU|LUR|RDL|URD|
+	allComb[19] = allComb[6];
+	Face::Up(allComb[19]);
+
+	//|DRD|LUL|RDR|ULU|
+	allComb[20] = allComb[7];
+	Face::Down(allComb[20]);
+
+	//|DRU|LDR|RUL|ULD|
+	allComb[21] = allComb[7];
+	Face::Up(allComb[21]);
+
+	//|LLD|RRD|ULL|URR|
+	allComb[22] = allComb[9];
+	Face::Down(allComb[22]);
+
+	//|DDLL|DDRR|DLLU|DRRU|LDDR|LLDD|LLUU|LUUR|RDDL|RRDD|RRUU|RUUL|ULLD|URRD|UULL|UURR|
+	allComb[23] = allComb[15];
+	Face::Left(allComb[23]);
+
+	return *std::min_element(allComb.begin(), allComb.end());
+}
+bool isSolved(const std::string& cube) {
+	for (int j = 0; j < 54; j += 9)
+		for (int i = 1; i < 9; ++i)
+			if (cube[i + j] != cube[j]) return false;
+	return true;
 }
 void print(const std::string& cube) {
 	std::cout << "          +-------+" << std::endl;
