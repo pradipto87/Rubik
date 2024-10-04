@@ -63,7 +63,7 @@ void recur(const string& cube, unordered_map<string, vector<string>>& allComb, s
 	recur(tmp, allComb, path + "A");
 }
 int main() {
-	string cube("YYYYYYYYYGGGGGGGGGOOOOOOOOOBBBBBBBBBRRRRRRRRRWWWWWWWWW");
+	/*string cube("YYYYYYYYYGGGGGGGGGOOOOOOOOOBBBBBBBBBRRRRRRRRRWWWWWWWWW");
 	int r{}, f{};
 	CubeOps::Rotate::MidUp(cube);
 	++r;
@@ -77,10 +77,37 @@ int main() {
 			break;
 		}
 	}
+	return 0;*/
+
+	string cube("0abcdefghijklmnopqrstuvwxyz1ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+	string tmp = cube;
+	CubeOps::Rotate::FaceClock(tmp);
+	cout << "FaceClock, " << tmp << endl;
+
+	tmp = cube;
+	CubeOps::Rotate::MidClock(tmp);
+	cout << "MidClock, " << tmp << endl;
+
+	tmp = cube;
+	CubeOps::Rotate::BackClock(tmp);
+	cout << "BackClock, " << tmp << endl;
+
+	tmp = cube;
+	CubeOps::Rotate::FaceAntiClock(tmp);
+	cout << "FaceAntiClock, " << tmp << endl;
+
+	tmp = cube;
+	CubeOps::Rotate::MidAntiClock(tmp);
+	cout << "MidAntiClock, " << tmp << endl;
+
+	tmp = cube;
+	CubeOps::Rotate::BackAntiClock(tmp);
+	cout << "BackAntiClock, " << tmp << endl;
+
 	return 0;
 
-	// string cube("0abcdefghijklmnopqrstuvwxyz1ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-	unordered_map<string, vector<string>> allComb;
+	unordered_map<string, vector<string>>
+		allComb;
 	recur(cube, allComb, "");
 	vector<vector<string>> allCombVec;
 	for (auto& ac : allComb) {
