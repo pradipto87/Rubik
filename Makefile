@@ -1,15 +1,36 @@
-# Variables
-CXX = clang++
-CXXFLAGS = -std=c++20 -stdlib=libc++ -Wall -Wextra -Wpedantic
+# Compiler and flags
+CXX := clang++
+CXXFLAGS := -std=c++20 -stdlib=libc++ -Wall -Wextra -Wpedantic
+
+# Directories
+SRC_DIR := source
+BUILD_DIR := build
+
+# Output files
+DEBUG_TARGET := $(BUILD_DIR)/rubik_debug
+RELEASE_TARGET := $(BUILD_DIR)/rubik
+
+# Source files
+SOURCES := $(wildcard $(SRC_DIR)/*.cpp)
 
 # Targets
+.PHONY: all debug release clean
+
 all: debug release
 
-debug:
-	$(CXX) $(CXXFLAGS) -g source/*.cpp -o build/rubik_debug
+debug: $(DEBUG_TARGET)
 
-release:
-	$(CXX) $(CXXFLAGS) -O3 source/*.cpp -o build/rubik
+release: $(RELEASE_TARGET)
+
+$(DEBUG_TARGET): $(SOURCES)
+	@mkdir -p $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -g $^ -o $@
+
+$(RELEASE_TARGET): $(SOURCES)
+	@mkdir -p $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -O3 $^ -o $@
 
 clean:
-	rm -f build/rubik build/rubik_debug
+	@echo "Cleaning up..."
+	@rm -f $(DEBUG_TARGET) $(RELEASE_TARGET)
+	@rmdir $(BUILD_DIR) 2>/dev/null || true
