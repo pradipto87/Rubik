@@ -17,20 +17,20 @@ file(GLOB SOURCES "source/*.cpp")
 add_executable(rubik_debug ${SOURCES})
 target_compile_options(rubik_debug PRIVATE -g)
 set_target_properties(rubik_debug PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/build"
-    OUTPUT_NAME "rubik_debug"
+	RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/build"
+	OUTPUT_NAME "rubik_debug"
 )
 
 # Add executable for release build
 add_executable(rubik ${SOURCES})
 target_compile_options(rubik PRIVATE -O3)
 set_target_properties(rubik PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/build"
-    OUTPUT_NAME "rubik"
+	RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/build"
+	OUTPUT_NAME "rubik"
 )
 
 # Custom clean target
-add_custom_target(clean
-    COMMAND ${CMAKE_COMMAND} -E remove -f ${CMAKE_BINARY_DIR}/build/rubik ${CMAKE_BINARY_DIR}/build/rubik_debug
-    COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/build
-)
+# add_custom_target(clean
+# COMMAND ${CMAKE_COMMAND} -E remove -f ${CMAKE_BINARY_DIR}/build/rubik ${CMAKE_BINARY_DIR}/build/rubik_debug
+# COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/build
+# )
