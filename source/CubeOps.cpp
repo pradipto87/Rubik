@@ -1,348 +1,673 @@
 #include "CubeOps.h"
 
-#include <algorithm>
 #include <array>
 #include <iostream>
 #include <string>
 
-namespace {
-
-// 012345678
-void copySide2D(std::string& dest, const int d, const std::string& src, const int s) {
-	for (int i = 0; i < 9; ++i)
-		dest[d + i] = src[s + i];
-}
-
-// 258147036
-void rotateAnti2D(std::string& dest, const int d, const std::string& src, const int s) {
-	dest[d + 0] = src[s + 2];
-	dest[d + 1] = src[s + 5];
-	dest[d + 2] = src[s + 8];
-	dest[d + 3] = src[s + 1];
-	dest[d + 4] = src[s + 4];
-	dest[d + 5] = src[s + 7];
-	dest[d + 6] = src[s + 0];
-	dest[d + 7] = src[s + 3];
-	dest[d + 8] = src[s + 6];
-}
-
-// 630741852
-void rotateClock2D(std::string& dest, const int d, const std::string& src, const int s) {
-	dest[d + 0] = src[s + 6];
-	dest[d + 1] = src[s + 3];
-	dest[d + 2] = src[s + 0];
-	dest[d + 3] = src[s + 7];
-	dest[d + 4] = src[s + 4];
-	dest[d + 5] = src[s + 1];
-	dest[d + 6] = src[s + 8];
-	dest[d + 7] = src[s + 5];
-	dest[d + 8] = src[s + 2];
-}
-
-// 876543210
-void copyReflection2D(std::string& dest, const int d, const std::string& src, const int s) {
-	for (int i = 0; i < 9; ++i)
-		dest[d + i] = src[s + 8 - i];
-}
-
-}  // namespace
 namespace CubeOps {
-std::string faceUp(const std::string temp) {
-	return rotateRightUp(rotateMidUp(rotateLeftUp(temp)));
-	std::string cube = temp;
-	copySide2D(cube, 0, temp, 18);
-	rotateAnti2D(cube, 9, temp, 9);
-	copySide2D(cube, 18, temp, 45);
-	rotateClock2D(cube, 27, temp, 27);
-	copyReflection2D(cube, 36, temp, 0);
-	copyReflection2D(cube, 45, temp, 36);
-	return cube;
+namespace Face {
+void Up(std::string& cube) {
+	Rotate::LeftUp(cube);
+	Rotate::MidUp(cube);
+	Rotate::RightUp(cube);
 }
-std::string faceDown(const std::string temp) {
-	std::string cube = temp;
-	copyReflection2D(cube, 0, temp, 36);
-	rotateClock2D(cube, 9, temp, 9);
-	copySide2D(cube, 18, temp, 0);
-	rotateAnti2D(cube, 27, temp, 27);
-	copyReflection2D(cube, 36, temp, 45);
-	copySide2D(cube, 45, temp, 18);
-	return cube;
+void Down(std::string& cube) {
+	Rotate::LeftDown(cube);
+	Rotate::MidDown(cube);
+	Rotate::RightDown(cube);
 }
-std::string faceLeft(const std::string temp) {
-	std::string cube = temp;
-	rotateClock2D(cube, 0, temp, 0);
-	copySide2D(cube, 9, temp, 18);
-	copySide2D(cube, 18, temp, 27);
-	copySide2D(cube, 27, temp, 36);
-	copySide2D(cube, 36, temp, 9);
-	rotateAnti2D(cube, 45, temp, 45);
-	return cube;
+void Left(std::string& cube) {
+	Rotate::TopLeft(cube);
+	Rotate::MidLeft(cube);
+	Rotate::BottomLeft(cube);
 }
-std::string faceRight(const std::string temp) {
-	std::string cube = temp;
-	rotateAnti2D(cube, 0, temp, 0);
-	copySide2D(cube, 9, temp, 36);
-	copySide2D(cube, 18, temp, 9);
-	copySide2D(cube, 27, temp, 18);
-	copySide2D(cube, 36, temp, 27);
-	rotateClock2D(cube, 45, temp, 45);
-	return cube;
+void Right(std::string& cube) {
+	Rotate::TopRight(cube);
+	Rotate::MidRight(cube);
+	Rotate::BottomRight(cube);
 }
-std::string rotateLeftUp(const std::string temp) {
-	std::string cube = temp;
-	cube[0] = temp[18];
-	cube[3] = temp[21];
-	cube[6] = temp[24];
-	cube[18] = temp[45];
-	cube[21] = temp[48];
-	cube[24] = temp[51];
-	cube[38] = temp[6];
-	cube[41] = temp[3];
-	cube[44] = temp[0];
-	cube[45] = temp[44];
-	cube[48] = temp[41];
-	cube[51] = temp[38];
-	rotateAnti2D(cube, 9, temp, 9);
-	return cube;
+void Clock(std::string& cube) {
+	Rotate::FaceClock(cube);
+	Rotate::MidClock(cube);
+	Rotate::BackClock(cube);
 }
-std::string rotateMidUp(std::string temp) {
-	std::string cube = temp;
-	cube[1] = temp[19];
-	cube[4] = temp[22];
-	cube[7] = temp[25];
-	cube[19] = temp[46];
-	cube[22] = temp[49];
-	cube[25] = temp[52];
-	cube[37] = temp[7];
-	cube[40] = temp[4];
-	cube[43] = temp[1];
-	cube[46] = temp[43];
-	cube[49] = temp[40];
-	cube[52] = temp[37];
-	return cube;
+void AntiClock(std::string& cube) {
+	Rotate::FaceAntiClock(cube);
+	Rotate::MidAntiClock(cube);
+	Rotate::BackAntiClock(cube);
 }
-std::string rotateRightUp(const std::string temp) {
-	std::string cube = temp;
-	cube[2] = temp[20];
-	cube[5] = temp[23];
-	cube[8] = temp[26];
-	cube[20] = temp[47];
-	cube[23] = temp[50];
-	cube[26] = temp[53];
-	cube[36] = temp[8];
-	cube[39] = temp[5];
-	cube[42] = temp[2];
-	cube[47] = temp[42];
-	cube[50] = temp[39];
-	cube[53] = temp[36];
-	rotateClock2D(cube, 27, temp, 27);
-	return cube;
+}  // namespace Face
+
+namespace Rotate {
+void LeftUp(std::string& cube) {
+	char tmp;
+
+	tmp = cube[0];
+	cube[0] = cube[18];
+	cube[18] = cube[45];
+	cube[45] = cube[44];
+	cube[44] = tmp;
+
+	tmp = cube[3];
+	cube[3] = cube[21];
+	cube[21] = cube[48];
+	cube[48] = cube[41];
+	cube[41] = tmp;
+
+	tmp = cube[6];
+	cube[6] = cube[24];
+	cube[24] = cube[51];
+	cube[51] = cube[38];
+	cube[38] = tmp;
+
+	tmp = cube[9];
+	cube[9] = cube[11];
+	cube[11] = cube[17];
+	cube[17] = cube[15];
+	cube[15] = tmp;
+
+	tmp = cube[10];
+	cube[10] = cube[14];
+	cube[14] = cube[16];
+	cube[16] = cube[12];
+	cube[12] = tmp;
 }
-std::string rotateLeftDown(const std::string temp) {
-	std::string cube = temp;
-	cube[0] = temp[44];
-	cube[3] = temp[41];
-	cube[6] = temp[38];
-	cube[18] = temp[0];
-	cube[21] = temp[3];
-	cube[24] = temp[6];
-	cube[38] = temp[51];
-	cube[41] = temp[48];
-	cube[44] = temp[45];
-	cube[45] = temp[18];
-	cube[48] = temp[21];
-	cube[51] = temp[24];
-	rotateClock2D(cube, 9, temp, 9);
-	return cube;
+void MidUp(std::string& cube) {
+	char tmp;
+
+	tmp = cube[1];
+	cube[1] = cube[19];
+	cube[19] = cube[46];
+	cube[46] = cube[43];
+	cube[43] = tmp;
+
+	tmp = cube[4];
+	cube[4] = cube[22];
+	cube[22] = cube[49];
+	cube[49] = cube[40];
+	cube[40] = tmp;
+
+	tmp = cube[7];
+	cube[7] = cube[25];
+	cube[25] = cube[52];
+	cube[52] = cube[37];
+	cube[37] = tmp;
 }
-std::string rotateMidDown(const std::string temp) {
-	std::string cube = temp;
-	cube[1] = temp[43];
-	cube[4] = temp[40];
-	cube[7] = temp[37];
-	cube[19] = temp[1];
-	cube[22] = temp[4];
-	cube[25] = temp[7];
-	cube[37] = temp[52];
-	cube[40] = temp[49];
-	cube[43] = temp[46];
-	cube[46] = temp[19];
-	cube[49] = temp[22];
-	cube[52] = temp[25];
-	return cube;
+void RightUp(std::string& cube) {
+	char tmp;
+
+	tmp = cube[2];
+	cube[2] = cube[20];
+	cube[20] = cube[47];
+	cube[47] = cube[42];
+	cube[42] = tmp;
+
+	tmp = cube[5];
+	cube[5] = cube[23];
+	cube[23] = cube[50];
+	cube[50] = cube[39];
+	cube[39] = tmp;
+
+	tmp = cube[8];
+	cube[8] = cube[26];
+	cube[26] = cube[53];
+	cube[53] = cube[36];
+	cube[36] = tmp;
+
+	tmp = cube[27];
+	cube[27] = cube[33];
+	cube[33] = cube[35];
+	cube[35] = cube[29];
+	cube[29] = tmp;
+
+	tmp = cube[28];
+	cube[28] = cube[30];
+	cube[30] = cube[34];
+	cube[34] = cube[32];
+	cube[32] = tmp;
 }
-std::string rotateRightDown(const std::string temp) {
-	std::string cube = temp;
-	cube[2] = temp[42];
-	cube[5] = temp[39];
-	cube[8] = temp[36];
-	cube[20] = temp[2];
-	cube[23] = temp[5];
-	cube[26] = temp[8];
-	cube[36] = temp[53];
-	cube[39] = temp[50];
-	cube[42] = temp[47];
-	cube[47] = temp[20];
-	cube[50] = temp[23];
-	cube[53] = temp[26];
-	rotateAnti2D(cube, 27, temp, 27);
-	return cube;
+void LeftDown(std::string& cube) {
+	char tmp;
+
+	tmp = cube[0];
+	cube[0] = cube[44];
+	cube[44] = cube[45];
+	cube[45] = cube[18];
+	cube[18] = tmp;
+
+	tmp = cube[3];
+	cube[3] = cube[41];
+	cube[41] = cube[48];
+	cube[48] = cube[21];
+	cube[21] = tmp;
+
+	tmp = cube[6];
+	cube[6] = cube[38];
+	cube[38] = cube[51];
+	cube[51] = cube[24];
+	cube[24] = tmp;
+
+	tmp = cube[9];
+	cube[9] = cube[15];
+	cube[15] = cube[17];
+	cube[17] = cube[11];
+	cube[11] = tmp;
+
+	tmp = cube[10];
+	cube[10] = cube[12];
+	cube[12] = cube[16];
+	cube[16] = cube[14];
+	cube[14] = tmp;
 }
-std::string rotateTopLeft(const std::string temp) {
-	std::string cube = temp;
-	cube[0] = temp[6];
-	cube[1] = temp[3];
-	cube[2] = temp[0];
-	cube[3] = temp[7];
-	cube[5] = temp[1];
-	cube[6] = temp[8];
-	cube[7] = temp[5];
-	cube[8] = temp[2];
-	cube[9] = temp[18];
-	cube[10] = temp[19];
-	cube[11] = temp[20];
-	cube[18] = temp[27];
-	cube[19] = temp[28];
-	cube[20] = temp[29];
-	cube[27] = temp[36];
-	cube[28] = temp[37];
-	cube[29] = temp[38];
-	cube[36] = temp[9];
-	cube[37] = temp[10];
-	cube[38] = temp[11];
-	return cube;
+void MidDown(std::string& cube) {
+	char tmp;
+
+	tmp = cube[1];
+	cube[1] = cube[43];
+	cube[43] = cube[46];
+	cube[46] = cube[19];
+	cube[19] = tmp;
+
+	tmp = cube[4];
+	cube[4] = cube[40];
+	cube[40] = cube[49];
+	cube[49] = cube[22];
+	cube[22] = tmp;
+
+	tmp = cube[7];
+	cube[7] = cube[37];
+	cube[37] = cube[52];
+	cube[52] = cube[25];
+	cube[25] = tmp;
 }
-std::string rotateMidLeft(const std::string temp) {
-	std::string cube = temp;
-	cube[12] = temp[21];
-	cube[13] = temp[22];
-	cube[14] = temp[23];
-	cube[21] = temp[30];
-	cube[22] = temp[31];
-	cube[23] = temp[32];
-	cube[30] = temp[39];
-	cube[31] = temp[40];
-	cube[32] = temp[41];
-	cube[39] = temp[12];
-	cube[40] = temp[13];
-	cube[41] = temp[14];
-	return cube;
+void RightDown(std::string& cube) {
+	char tmp;
+
+	tmp = cube[2];
+	cube[2] = cube[42];
+	cube[42] = cube[47];
+	cube[47] = cube[20];
+	cube[20] = tmp;
+
+	tmp = cube[5];
+	cube[5] = cube[39];
+	cube[39] = cube[50];
+	cube[50] = cube[23];
+	cube[23] = tmp;
+
+	tmp = cube[8];
+	cube[8] = cube[36];
+	cube[36] = cube[53];
+	cube[53] = cube[26];
+	cube[26] = tmp;
+
+	tmp = cube[27];
+	cube[27] = cube[29];
+	cube[29] = cube[35];
+	cube[35] = cube[33];
+	cube[33] = tmp;
+
+	tmp = cube[28];
+	cube[28] = cube[32];
+	cube[32] = cube[34];
+	cube[34] = cube[30];
+	cube[30] = tmp;
 }
-std::string rotateBottomLeft(const std::string temp) {
-	std::string cube = temp;
-	cube[15] = temp[24];
-	cube[16] = temp[25];
-	cube[17] = temp[26];
-	cube[24] = temp[33];
-	cube[25] = temp[34];
-	cube[26] = temp[35];
-	cube[33] = temp[42];
-	cube[34] = temp[43];
-	cube[35] = temp[44];
-	cube[42] = temp[15];
-	cube[43] = temp[16];
-	cube[44] = temp[17];
-	cube[45] = temp[47];
-	cube[46] = temp[50];
-	cube[47] = temp[53];
-	cube[48] = temp[46];
-	cube[50] = temp[52];
-	cube[51] = temp[45];
-	cube[52] = temp[48];
-	cube[53] = temp[51];
-	return cube;
+void TopLeft(std::string& cube) {
+	char tmp;
+
+	tmp = cube[0];
+	cube[0] = cube[6];
+	cube[6] = cube[8];
+	cube[8] = cube[2];
+	cube[2] = tmp;
+
+	tmp = cube[1];
+	cube[1] = cube[3];
+	cube[3] = cube[7];
+	cube[7] = cube[5];
+	cube[5] = tmp;
+
+	tmp = cube[9];
+	cube[9] = cube[18];
+	cube[18] = cube[27];
+	cube[27] = cube[36];
+	cube[36] = tmp;
+
+	tmp = cube[10];
+	cube[10] = cube[19];
+	cube[19] = cube[28];
+	cube[28] = cube[37];
+	cube[37] = tmp;
+
+	tmp = cube[11];
+	cube[11] = cube[20];
+	cube[20] = cube[29];
+	cube[29] = cube[38];
+	cube[38] = tmp;
 }
-std::string rotateTopRight(const std::string temp) {
-	std::string cube = temp;
-	cube[0] = temp[2];
-	cube[1] = temp[5];
-	cube[2] = temp[8];
-	cube[3] = temp[1];
-	cube[5] = temp[7];
-	cube[6] = temp[0];
-	cube[7] = temp[3];
-	cube[8] = temp[6];
-	cube[9] = temp[36];
-	cube[10] = temp[37];
-	cube[11] = temp[38];
-	cube[18] = temp[9];
-	cube[19] = temp[10];
-	cube[20] = temp[11];
-	cube[27] = temp[18];
-	cube[28] = temp[19];
-	cube[29] = temp[20];
-	cube[36] = temp[27];
-	cube[37] = temp[28];
-	cube[38] = temp[29];
-	return cube;
+void MidLeft(std::string& cube) {
+	char tmp;
+
+	tmp = cube[12];
+	cube[12] = cube[21];
+	cube[21] = cube[30];
+	cube[30] = cube[39];
+	cube[39] = tmp;
+
+	tmp = cube[13];
+	cube[13] = cube[22];
+	cube[22] = cube[31];
+	cube[31] = cube[40];
+	cube[40] = tmp;
+
+	tmp = cube[14];
+	cube[14] = cube[23];
+	cube[23] = cube[32];
+	cube[32] = cube[41];
+	cube[41] = tmp;
 }
-std::string rotateMidRight(const std::string temp) {
-	std::string cube = temp;
-	cube[12] = temp[39];
-	cube[13] = temp[40];
-	cube[14] = temp[41];
-	cube[21] = temp[12];
-	cube[22] = temp[13];
-	cube[23] = temp[14];
-	cube[30] = temp[21];
-	cube[31] = temp[22];
-	cube[32] = temp[23];
-	cube[39] = temp[30];
-	cube[40] = temp[31];
-	cube[41] = temp[32];
-	return cube;
+void BottomLeft(std::string& cube) {
+	char tmp;
+
+	tmp = cube[15];
+	cube[15] = cube[24];
+	cube[24] = cube[33];
+	cube[33] = cube[42];
+	cube[42] = tmp;
+
+	tmp = cube[16];
+	cube[16] = cube[25];
+	cube[25] = cube[34];
+	cube[34] = cube[43];
+	cube[43] = tmp;
+
+	tmp = cube[17];
+	cube[17] = cube[26];
+	cube[26] = cube[35];
+	cube[35] = cube[44];
+	cube[44] = tmp;
+
+	tmp = cube[45];
+	cube[45] = cube[47];
+	cube[47] = cube[53];
+	cube[53] = cube[51];
+	cube[51] = tmp;
+
+	tmp = cube[46];
+	cube[46] = cube[50];
+	cube[50] = cube[52];
+	cube[52] = cube[48];
+	cube[48] = tmp;
 }
-std::string rotateBottomRight(const std::string temp) {
-	std::string cube = temp;
-	cube[15] = temp[42];
-	cube[16] = temp[43];
-	cube[17] = temp[44];
-	cube[24] = temp[15];
-	cube[25] = temp[16];
-	cube[26] = temp[17];
-	cube[33] = temp[24];
-	cube[34] = temp[25];
-	cube[35] = temp[26];
-	cube[42] = temp[33];
-	cube[43] = temp[34];
-	cube[44] = temp[35];
-	cube[45] = temp[51];
-	cube[46] = temp[48];
-	cube[47] = temp[45];
-	cube[48] = temp[52];
-	cube[50] = temp[46];
-	cube[51] = temp[53];
-	cube[52] = temp[50];
-	cube[53] = temp[47];
-	return cube;
+void TopRight(std::string& cube) {
+	char tmp;
+
+	tmp = cube[0];
+	cube[0] = cube[2];
+	cube[2] = cube[8];
+	cube[8] = cube[6];
+	cube[6] = tmp;
+
+	tmp = cube[1];
+	cube[1] = cube[5];
+	cube[5] = cube[7];
+	cube[7] = cube[3];
+	cube[3] = tmp;
+
+	tmp = cube[9];
+	cube[9] = cube[36];
+	cube[36] = cube[27];
+	cube[27] = cube[18];
+	cube[18] = tmp;
+
+	tmp = cube[10];
+	cube[10] = cube[37];
+	cube[37] = cube[28];
+	cube[28] = cube[19];
+	cube[19] = tmp;
+
+	tmp = cube[11];
+	cube[11] = cube[38];
+	cube[38] = cube[29];
+	cube[29] = cube[20];
+	cube[20] = tmp;
 }
-std::string getLowestComb(const std::string cube) {
+void MidRight(std::string& cube) {
+	char tmp;
+
+	tmp = cube[12];
+	cube[12] = cube[39];
+	cube[39] = cube[30];
+	cube[30] = cube[21];
+	cube[21] = tmp;
+
+	tmp = cube[13];
+	cube[13] = cube[40];
+	cube[40] = cube[31];
+	cube[31] = cube[22];
+	cube[22] = tmp;
+
+	tmp = cube[14];
+	cube[14] = cube[41];
+	cube[41] = cube[32];
+	cube[32] = cube[23];
+	cube[23] = tmp;
+}
+void BottomRight(std::string& cube) {
+	char tmp;
+
+	tmp = cube[15];
+	cube[15] = cube[42];
+	cube[42] = cube[33];
+	cube[33] = cube[24];
+	cube[24] = tmp;
+
+	tmp = cube[16];
+	cube[16] = cube[43];
+	cube[43] = cube[34];
+	cube[34] = cube[25];
+	cube[25] = tmp;
+
+	tmp = cube[17];
+	cube[17] = cube[44];
+	cube[44] = cube[35];
+	cube[35] = cube[26];
+	cube[26] = tmp;
+
+	tmp = cube[45];
+	cube[45] = cube[51];
+	cube[51] = cube[53];
+	cube[53] = cube[47];
+	cube[47] = tmp;
+
+	tmp = cube[46];
+	cube[46] = cube[48];
+	cube[48] = cube[52];
+	cube[52] = cube[50];
+	cube[50] = tmp;
+}
+void FaceClock(std::string& cube) {
+	char tmp;
+
+	tmp = cube[6];
+	cube[6] = cube[17];
+	cube[17] = cube[47];
+	cube[47] = cube[27];
+	cube[27] = tmp;
+
+	tmp = cube[7];
+	cube[7] = cube[14];
+	cube[14] = cube[46];
+	cube[46] = cube[30];
+	cube[30] = tmp;
+
+	tmp = cube[8];
+	cube[8] = cube[11];
+	cube[11] = cube[45];
+	cube[45] = cube[33];
+	cube[33] = tmp;
+
+	tmp = cube[18];
+	cube[18] = cube[24];
+	cube[24] = cube[26];
+	cube[26] = cube[20];
+	cube[20] = tmp;
+
+	tmp = cube[19];
+	cube[19] = cube[21];
+	cube[21] = cube[25];
+	cube[25] = cube[23];
+	cube[23] = tmp;
+}
+void MidClock(std::string& cube) {
+	char tmp;
+
+	tmp = cube[3];
+	cube[3] = cube[16];
+	cube[16] = cube[50];
+	cube[50] = cube[28];
+	cube[28] = tmp;
+
+	tmp = cube[4];
+	cube[4] = cube[13];
+	cube[13] = cube[49];
+	cube[49] = cube[31];
+	cube[31] = tmp;
+
+	tmp = cube[5];
+	cube[5] = cube[10];
+	cube[10] = cube[48];
+	cube[48] = cube[34];
+	cube[34] = tmp;
+}
+void BackClock(std::string& cube) {
+	char tmp;
+
+	tmp = cube[0];
+	cube[0] = cube[15];
+	cube[15] = cube[53];
+	cube[53] = cube[29];
+	cube[29] = tmp;
+
+	tmp = cube[1];
+	cube[1] = cube[12];
+	cube[12] = cube[52];
+	cube[52] = cube[32];
+	cube[32] = tmp;
+
+	tmp = cube[2];
+	cube[2] = cube[9];
+	cube[9] = cube[51];
+	cube[51] = cube[35];
+	cube[35] = tmp;
+
+	tmp = cube[36];
+	cube[36] = cube[38];
+	cube[38] = cube[44];
+	cube[44] = cube[42];
+	cube[42] = tmp;
+
+	tmp = cube[37];
+	cube[37] = cube[41];
+	cube[41] = cube[43];
+	cube[43] = cube[39];
+	cube[39] = tmp;
+}
+void FaceAntiClock(std::string& cube) {
+	char tmp;
+
+	tmp = cube[6];
+	cube[6] = cube[27];
+	cube[27] = cube[47];
+	cube[47] = cube[17];
+	cube[17] = tmp;
+
+	tmp = cube[7];
+	cube[7] = cube[30];
+	cube[30] = cube[46];
+	cube[46] = cube[14];
+	cube[14] = tmp;
+
+	tmp = cube[8];
+	cube[8] = cube[33];
+	cube[33] = cube[45];
+	cube[45] = cube[11];
+	cube[11] = tmp;
+
+	tmp = cube[18];
+	cube[18] = cube[20];
+	cube[20] = cube[26];
+	cube[26] = cube[24];
+	cube[24] = tmp;
+
+	tmp = cube[19];
+	cube[19] = cube[23];
+	cube[23] = cube[25];
+	cube[25] = cube[21];
+	cube[21] = tmp;
+}
+void MidAntiClock(std::string& cube) {
+	char tmp;
+
+	tmp = cube[3];
+	cube[3] = cube[28];
+	cube[28] = cube[50];
+	cube[50] = cube[16];
+	cube[16] = tmp;
+
+	tmp = cube[4];
+	cube[4] = cube[31];
+	cube[31] = cube[49];
+	cube[49] = cube[13];
+	cube[13] = tmp;
+
+	tmp = cube[5];
+	cube[5] = cube[34];
+	cube[34] = cube[48];
+	cube[48] = cube[10];
+	cube[10] = tmp;
+}
+void BackAntiClock(std::string& cube) {
+	char tmp;
+
+	tmp = cube[0];
+	cube[0] = cube[29];
+	cube[29] = cube[53];
+	cube[53] = cube[15];
+	cube[15] = tmp;
+
+	tmp = cube[1];
+	cube[1] = cube[32];
+	cube[32] = cube[52];
+	cube[52] = cube[12];
+	cube[12] = tmp;
+
+	tmp = cube[2];
+	cube[2] = cube[35];
+	cube[35] = cube[51];
+	cube[51] = cube[9];
+	cube[9] = tmp;
+
+	tmp = cube[36];
+	cube[36] = cube[42];
+	cube[42] = cube[44];
+	cube[44] = cube[38];
+	cube[38] = tmp;
+
+	tmp = cube[37];
+	cube[37] = cube[39];
+	cube[39] = cube[43];
+	cube[43] = cube[41];
+	cube[41] = tmp;
+}
+}  // namespace Rotate
+
+std::string getLowestComb(const std::string& cube) {
 	std::array<std::string, 24> allComb;
+
+	//||
 	allComb[0] = cube;
-	allComb[1] = faceDown(allComb[0]);
-	allComb[2] = faceLeft(allComb[0]);
-	allComb[3] = faceRight(allComb[0]);
-	allComb[4] = faceUp(allComb[0]);
-	allComb[5] = faceLeft(allComb[1]);
-	allComb[6] = faceRight(allComb[1]);
-	allComb[7] = faceDown(allComb[2]);
-	allComb[8] = faceLeft(allComb[2]);
-	allComb[9] = faceUp(allComb[2]);
-	allComb[10] = faceDown(allComb[3]);
-	allComb[11] = faceUp(allComb[3]);
-	allComb[12] = faceLeft(allComb[4]);
-	allComb[13] = faceRight(allComb[4]);
-	allComb[14] = faceUp(allComb[4]);
-	allComb[15] = faceLeft(allComb[5]);
-	allComb[16] = faceDown(allComb[12]);
-	allComb[17] = faceLeft(allComb[12]);
-	allComb[18] = faceUp(allComb[12]);
-	allComb[19] = faceDown(allComb[13]);
-	allComb[20] = faceUp(allComb[13]);
-	allComb[21] = faceLeft(allComb[14]);
-	allComb[22] = faceRight(allComb[14]);
-	allComb[23] = faceLeft(allComb[21]);
+
+	//|D|
+	allComb[1] = allComb[0];
+	Face::Down(allComb[1]);
+
+	//|L|
+	allComb[2] = allComb[0];
+	Face::Left(allComb[2]);
+
+	//|R|
+	allComb[3] = allComb[0];
+	Face::Right(allComb[3]);
+
+	//|U|
+	allComb[4] = allComb[0];
+	Face::Up(allComb[4]);
+
+	//|DD|UU|
+	allComb[5] = allComb[1];
+	Face::Down(allComb[5]);
+
+	//|DL|
+	allComb[6] = allComb[1];
+	Face::Left(allComb[6]);
+
+	//|DR|
+	allComb[7] = allComb[1];
+	Face::Right(allComb[7]);
+
+	//|LD|
+	allComb[8] = allComb[2];
+	Face::Down(allComb[8]);
+
+	//|LL|RR|
+	allComb[9] = allComb[2];
+	Face::Left(allComb[9]);
+
+	//|LU|
+	allComb[10] = allComb[2];
+	Face::Up(allComb[10]);
+
+	//|RD|
+	allComb[11] = allComb[3];
+	Face::Down(allComb[11]);
+
+	//|RU|
+	allComb[12] = allComb[3];
+	Face::Up(allComb[12]);
+
+	//|UL|
+	allComb[13] = allComb[4];
+	Face::Left(allComb[13]);
+
+	//|UR|
+	allComb[14] = allComb[4];
+	Face::Right(allComb[14]);
+
+	//|DDL|RDD|RUU|UUL|
+	allComb[15] = allComb[5];
+	Face::Left(allComb[15]);
+
+	//|DDR|LDD|LUU|UUR|
+	allComb[16] = allComb[5];
+	Face::Right(allComb[16]);
+
+	//|DLD|LDL|RUR|URU|
+	allComb[17] = allComb[6];
+	Face::Down(allComb[17]);
+
+	//|DLL|DRR|LLU|RRU|
+	allComb[18] = allComb[6];
+	Face::Left(allComb[18]);
+
+	//|DLU|LUR|RDL|URD|
+	allComb[19] = allComb[6];
+	Face::Up(allComb[19]);
+
+	//|DRD|LUL|RDR|ULU|
+	allComb[20] = allComb[7];
+	Face::Down(allComb[20]);
+
+	//|DRU|LDR|RUL|ULD|
+	allComb[21] = allComb[7];
+	Face::Up(allComb[21]);
+
+	//|LLD|RRD|ULL|URR|
+	allComb[22] = allComb[9];
+	Face::Down(allComb[22]);
+
+	//|DDLL|DDRR|DLLU|DRRU|LDDR|LLDD|LLUU|LUUR|RDDL|RRDD|RRUU|RUUL|ULLD|URRD|UULL|UURR|
+	allComb[23] = allComb[15];
+	Face::Left(allComb[23]);
+
 	return *std::min_element(allComb.begin(), allComb.end());
+}
+bool isSolved(const std::string& cube) {
+	for (int j = 0; j < 54; j += 9)
+		for (int i = 1; i < 9; ++i)
+			if (cube[i + j] != cube[j]) return false;
+	return true;
 }
 void print(const std::string& cube) {
 	std::cout << "          +-------+" << std::endl;
